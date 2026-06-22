@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_contact_custom" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.contact_custom</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <!-- Hide Company Name field completely -->
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Always show "Address" label for both Individual and Company -->
+            <xpath expr="//span[@name='address_name']" position="replace">
+                <span class="o_form_label o_td_label o_address_type" name="address_name">
+                    <span>Address</span>
+                </span>
+            </xpath>
+            
+            <!-- Add Contact Name and Creator fields to the right column -->
+            <xpath expr="//field[@name='function']" position="before">
+                <field name="person_name" string="Contact Name"/>
+                <field name="created_by_id" string="Created By" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Hide company & address from Kanban -->
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="domain">[('parent_id', '=', False)]</field>
+    </record>
+
+    <record id="base.action_partner_form" model="ir.actions.act_window">
+        <field name="domain">[('parent_id', '=', False)]</field>
+    </record>
+
+    <!-- Add Created By as a Group By option in the search view -->
+    <record id="view_res_partner_filter_inherit_contact_custom_groupby" model="ir.ui.view">
+        <field name="name">res.partner.view.search.inherit.contact_custom.groupby</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='supplier']" position="after">
+                <separator/>
+                <filter string="Created By" name="groupby_created_by" context="{'group_by':'create_uid'}"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Replace Sales smart button fa-usd -> ₹ symbol on Sales smart button -->
+    <record id="res_partner_form_inherit_sales_rupee" model="ir.ui.view">
+        <field name="name">res.partner.form.sales.rupee</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sale.res_partner_view_buttons"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_sale_order']" position="attributes">
+                <attribute name="icon">fa-inr</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Replace ONLY the dollar icon -->
+    <record id="crm_lead_partner_kanban_view_inherit_inr" model="ir.ui.view">
+        <field name="name">res.partner.kanban.saleorder.inr</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sale.crm_lead_partner_kanban_view"/>
+
+        <field name="arch" type="xml">
+
+            <!-- Target button first -->
+            <xpath expr="//a[@name='action_view_sale_order']/i" position="attributes">
+                <attribute name="class">fa fa-inr me-1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

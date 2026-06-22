@@ -1,0 +1,25 @@
+<odoo>
+    <record id="view_sale_order_form_documents" model="ir.ui.view">
+        <field name="name">sale.order.form.documents</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Documents">
+                    <group string="HEADER">
+                        <!-- Upload -->
+                        <field name="header_file" filename="header_filename" options="{'no_open': True, 'accepted_file_extensions': '.pdf'}"/>
+                        <!-- Show filename (clean, no duplicate) -->
+                        <field name="header_filename" invisible="1"/>
+                    </group>
+
+                    <!-- FOOTER -->
+                    <group string="FOOTER">
+                        <field name="footer_file" filename="footer_filename" options="{'no_open': True, 'accepted_file_extensions': '.pdf'}"/>
+                        <field name="footer_filename" invisible="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
